@@ -31,6 +31,7 @@ public class HelloApplication extends Application {
             Optional<Session> dialogResult = dialog.showAndWait();
             dialogResult.ifPresent(session -> {
                 SessionView sv = new SessionView(session);
+                sv.setPrefWidth(200);
                 sessionsContainer.getChildren().add(sv);
             });
         });
