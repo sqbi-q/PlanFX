@@ -3,6 +3,7 @@ package com.sqbiq.planfx;
 import com.sqbiq.planfx.elements.SessionAddDialog;
 import com.sqbiq.planfx.session.Session;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
@@ -16,17 +17,6 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Pane root = new Pane();
-        root.getChildren().add(getApplicationToolbar(stage));
-
-        Scene scene = new Scene(root, 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    private ToolBar getApplicationToolbar(Stage stage) {
-        ToolBar toolbar = new ToolBar();
-        toolbar.prefWidthProperty().bind(stage.widthProperty());
 
         Button addSessionButton = new Button("Add session");
 
@@ -38,7 +28,19 @@ public class HelloApplication extends Application {
             });
         });
 
-        toolbar.getItems().add(addSessionButton);
+        root.getChildren().add(getApplicationToolbar(stage, addSessionButton));
+
+        Scene scene = new Scene(root, 320, 240);
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private ToolBar getApplicationToolbar(Stage stage, Node... es) {
+        ToolBar toolbar = new ToolBar();
+        toolbar.prefWidthProperty().bind(stage.widthProperty());
+
+        toolbar.getItems().addAll(es);
 
         return toolbar;
     }
