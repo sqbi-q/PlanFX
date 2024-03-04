@@ -1,9 +1,10 @@
 package com.sqbiq.planfx.elements;
 
+import com.sqbiq.planfx.session.Session;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-public class SessionAddDialog extends Dialog {
+public class SessionAddDialog extends Dialog<Session> {
     public SessionAddDialog() {
         setTitle("Add Session");
 
@@ -37,5 +38,14 @@ public class SessionAddDialog extends Dialog {
         getDialogPane().getButtonTypes().add(addButtonType);
         boolean addDisabled = false;
         getDialogPane().lookupButton(addButtonType).setDisable(addDisabled);
+
+        setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                Session session = new Session(title.getText());
+                session.setDescription(description.getText());
+                return session;
+            }
+            return null;
+        });
     }
 }
