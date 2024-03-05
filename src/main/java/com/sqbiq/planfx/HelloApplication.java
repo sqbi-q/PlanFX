@@ -19,11 +19,12 @@ import java.util.Optional;
 public class HelloApplication extends Application {
     private ArrayList<Session> sessions = new ArrayList<>();
 
+    private HBox sessionsContainer = new HBox();
+
     @Override
     public void start(Stage stage) throws IOException {
         VBox root = new VBox();
 
-        HBox sessionsContainer = new HBox();
         ScrollPane sessionsPane = new ScrollPane();
         sessionsPane.setContent(sessionsContainer);
 
@@ -32,12 +33,7 @@ public class HelloApplication extends Application {
         addSessionButton.setOnAction(event -> {
             SessionAddDialog dialog = new SessionAddDialog();
             Optional<Session> dialogResult = dialog.showAndWait();
-            dialogResult.ifPresent(session -> {
-                sessions.add(session);
-                SessionView sv = new SessionView(session);
-                sv.setPrefWidth(200);
-                sessionsContainer.getChildren().add(sv);
-            });
+            dialogResult.ifPresent(this::onSessionAdd);
         });
 
         root.getChildren().add(getApplicationToolbar(stage, addSessionButton));
@@ -47,6 +43,30 @@ public class HelloApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void onSessionAdd(Session session) {
+        sessions.add(session);
+        SessionView sv = new SessionView(session);
+        sv.setPrefWidth(200);
+
+        sv.addSessionEventListener(new SessionView.SessionViewEventListener() {
+            @Override
+            public void deleted(SessionView sessionView) {
+                // todo confirm if user really wants to remove session
+
+                // remove session view and associated session
+                sessions.remove(sessionView.getSession());
+                sessionsContainer.getChildren().remove(sessionView);
+            }
+
+            @Override
+            public void edited(SessionView sessionView) {
+                System.out.println("Edit");
+            }
+        });
+
+        sessionsContainer.getChildren().add(sv);
     }
 
     private ToolBar getApplicationToolbar(Stage stage, Node... es) {

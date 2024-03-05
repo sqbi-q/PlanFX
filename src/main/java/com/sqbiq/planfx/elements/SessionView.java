@@ -9,8 +9,20 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.List;
+
 public class SessionView extends VBox {
     private final Session session;
+
+    private final List<SessionViewEventListener> sessionViewEventListeners =
+            new ArrayList<>();
+
+    public interface SessionViewEventListener extends EventListener {
+        void deleted(SessionView sessionView);
+        void edited(SessionView sessionView);
+    }
 
     public SessionView(Session session) {
         this.session = session;
@@ -33,18 +45,32 @@ public class SessionView extends VBox {
                 contextMenu.show(this, e.getScreenX(), e.getScreenY()));
     }
 
+    public Session getSession() {
+        return session;
+    }
+
+    public void addSessionEventListener(SessionViewEventListener onSessionViewEvent) {
+        sessionViewEventListeners.add(onSessionViewEvent);
+    }
+
+    public void removeSessionEventListener(SessionViewEventListener onSessionViewEvent) {
+        sessionViewEventListeners.remove(onSessionViewEvent);
+    }
+
     private ContextMenu getContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
 
         MenuItem deleteItem = new MenuItem("Delete session");
         deleteItem.setOnAction(event -> {
-            System.out.println("Delete");
+            // notify on delete to arrays holding SessionView
+            sessionViewEventListeners.forEach(listener -> listener.deleted(this));
         });
         contextMenu.getItems().add(deleteItem);
 
         MenuItem editItem = new MenuItem("Edit");
         editItem.setOnAction(event -> {
-            System.out.println("Edit");
+            // notify on edit to pop-up edit menu
+            sessionViewEventListeners.forEach(listener -> listener.edited(this));
         });
         contextMenu.getItems().add(editItem);
 
