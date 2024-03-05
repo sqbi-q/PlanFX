@@ -13,9 +13,12 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class HelloApplication extends Application {
+    private ArrayList<Session> sessions = new ArrayList<>();
+
     @Override
     public void start(Stage stage) throws IOException {
         VBox root = new VBox();
@@ -30,6 +33,7 @@ public class HelloApplication extends Application {
             SessionAddDialog dialog = new SessionAddDialog();
             Optional<Session> dialogResult = dialog.showAndWait();
             dialogResult.ifPresent(session -> {
+                sessions.add(session);
                 SessionView sv = new SessionView(session);
                 sv.setPrefWidth(200);
                 sessionsContainer.getChildren().add(sv);

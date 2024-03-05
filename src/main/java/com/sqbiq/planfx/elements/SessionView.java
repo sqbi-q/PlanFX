@@ -15,11 +15,13 @@ public class SessionView extends VBox {
     public SessionView(Session session) {
         this.session = session;
 
-        Label title = new Label(session.getTitle());
+        Label title = new Label();
+        title.textProperty().bind(session.getTitleProperty());
         title.fontProperty().set(new Font(20));
         getChildren().add(title);
 
-        Label description = new Label(session.getDescription());
+        Label description = new Label();
+        description.textProperty().bind(session.getDescriptionProperty());
         getChildren().add(description);
 
         borderProperty().set(new Border(new BorderStroke(Color.BLACK,
