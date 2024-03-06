@@ -65,14 +65,21 @@ public class SessionMenuDialog extends Dialog {
         ((Button) dialogPane.lookupButton(dialog.addButton)).setOnAction(e -> {
             Session session = new Session(dialog.getSessionTitle());
             session.setDescription(dialog.getDescription());
+            // todo implement DatePicker/LocalDateTime
             onAdd.added(session);
         });
 
         return dialog;
     }
 
-    public static SessionMenuDialog Edit(EditSessionEventListener onEdit) {
+    public static SessionMenuDialog Edit(Session baseSession, EditSessionEventListener onEdit) {
         SessionMenuDialog dialog = new SessionMenuDialog();
+
+        // set fields to match properties of baseSession
+        dialog.setSessionTitle(baseSession.getTitle());
+        dialog.setDescription(baseSession.getDescription());
+        // todo implement DatePicker/LocalDateTime
+
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.getButtonTypes().add(dialog.deleteButton);
         dialogPane.getButtonTypes().add(dialog.editButton);
@@ -82,7 +89,9 @@ public class SessionMenuDialog extends Dialog {
         });
 
         ((Button) dialogPane.lookupButton(dialog.editButton)).setOnAction(e -> {
-
+            Session editedSession = new Session(dialog.getSessionTitle());
+            editedSession.setDescription(dialog.getDescription());
+            onEdit.edited(editedSession);
         });
 
         return dialog;

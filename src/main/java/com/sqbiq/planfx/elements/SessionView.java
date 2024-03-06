@@ -36,6 +36,8 @@ public class SessionView extends VBox {
         description.textProperty().bind(session.getDescriptionProperty());
         getChildren().add(description);
 
+        // todo implement DatePicker/LocalDateTime
+
         borderProperty().set(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         paddingProperty().set(new Insets(10, 10, 10, 10));

@@ -61,17 +61,21 @@ public class HelloApplication extends Application {
 
             @Override
             public void edited(SessionView sessionView) {
-                SessionMenuDialog dialog = SessionMenuDialog.Edit(new SessionMenuDialog.EditSessionEventListener() {
-                    @Override
-                    public void deleted() {
-                        onSessionDelete(sessionView);
-                    }
+                SessionMenuDialog dialog = SessionMenuDialog.Edit(session,
+                    new SessionMenuDialog.EditSessionEventListener() {
+                        @Override
+                        public void deleted() {
+                            onSessionDelete(sessionView);
+                        }
 
-                    @Override
-                    public void edited(Session session) {
-
-                    }
-                });
+                        @Override
+                        public void edited(Session editedSession) {
+                            session.setTitle(editedSession.getTitle());
+                            session.setDescription(editedSession.getDescription());
+                            session.setDateBegin(editedSession.getDateBegin());
+                            session.setDateEnd(editedSession.getDateEnd());
+                        }
+                    });
                 dialog.showAndWait();
             }
         });
