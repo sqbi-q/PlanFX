@@ -1,6 +1,7 @@
 package com.sqbiq.planfx;
 
 import com.sqbiq.planfx.elements.SessionAddDialog;
+import com.sqbiq.planfx.elements.SessionMenuDialog;
 import com.sqbiq.planfx.elements.SessionView;
 import com.sqbiq.planfx.session.Session;
 import javafx.application.Application;
@@ -31,9 +32,8 @@ public class HelloApplication extends Application {
         Button addSessionButton = new Button("Add session");
 
         addSessionButton.setOnAction(event -> {
-            SessionAddDialog dialog = new SessionAddDialog();
-            Optional<Session> dialogResult = dialog.showAndWait();
-            dialogResult.ifPresent(this::onSessionAdd);
+            SessionMenuDialog dialog = SessionMenuDialog.Add(this::onSessionAdd);
+            dialog.showAndWait();
         });
 
         root.getChildren().add(getApplicationToolbar(stage, addSessionButton));
