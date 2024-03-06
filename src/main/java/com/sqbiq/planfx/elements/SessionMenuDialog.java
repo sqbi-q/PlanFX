@@ -53,7 +53,7 @@ public class SessionMenuDialog extends Dialog {
     }
 
     public interface EditSessionEventListener extends EventListener {
-        void deleted(Session session);
+        void deleted();
         void edited(Session session);
     }
 
@@ -78,6 +78,7 @@ public class SessionMenuDialog extends Dialog {
         dialogPane.getButtonTypes().add(dialog.editButton);
 
         ((Button) dialogPane.lookupButton(dialog.deleteButton)).setOnAction(e -> {
+            onEdit.deleted();
         });
 
         ((Button) dialogPane.lookupButton(dialog.editButton)).setOnAction(e -> {

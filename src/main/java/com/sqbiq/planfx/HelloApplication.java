@@ -56,17 +56,32 @@ public class HelloApplication extends Application {
                 // todo confirm if user really wants to remove session
 
                 // remove session view and associated session
-                sessions.remove(sessionView.getSession());
-                sessionsContainer.getChildren().remove(sessionView);
+                onSessionDelete(sessionView);
             }
 
             @Override
             public void edited(SessionView sessionView) {
-                System.out.println("Edit");
+                SessionMenuDialog dialog = SessionMenuDialog.Edit(new SessionMenuDialog.EditSessionEventListener() {
+                    @Override
+                    public void deleted() {
+                        onSessionDelete(sessionView);
+                    }
+
+                    @Override
+                    public void edited(Session session) {
+
+                    }
+                });
+                dialog.showAndWait();
             }
         });
 
         sessionsContainer.getChildren().add(sv);
+    }
+
+    private void onSessionDelete(SessionView sv) {
+        sessions.remove(sv.getSession());
+        sessionsContainer.getChildren().remove(sv);
     }
 
     private ToolBar getApplicationToolbar(Stage stage, Node... es) {
