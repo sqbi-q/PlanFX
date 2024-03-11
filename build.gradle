@@ -6,6 +6,12 @@ plugins {
     id 'org.beryx.jlink' version '2.25.0'
 }
 
+git {
+    implementation 'https://github.com/sqbi-q/calendarviewfx.git', {
+        tag 'main'
+    }
+}
+
 group 'com.sqbiq'
 version '1.0-SNAPSHOT'
 
