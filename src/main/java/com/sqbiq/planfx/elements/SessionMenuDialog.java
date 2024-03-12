@@ -4,6 +4,9 @@ import com.sqbiq.planfx.session.Session;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -14,8 +17,12 @@ public class SessionMenuDialog extends Dialog {
 
     private TextField title = new TextField();
     private TextArea description = new TextArea();
+
     private DatePicker dateBegin = new DatePicker();
+    private TimeSpinner timeBegin = new TimeSpinner(LocalTime.now());
+
     private DatePicker dateEnd = new DatePicker();
+    private TimeSpinner timeEnd = new TimeSpinner(LocalTime.now().plusMinutes(45));
 
     private ButtonType deleteButton = new ButtonType("Delete",
             ButtonBar.ButtonData.OK_DONE);
@@ -38,10 +45,12 @@ public class SessionMenuDialog extends Dialog {
         Label dateBeginLabel = new Label("Date begin:");
         fieldsPane.add(dateBeginLabel, 0, 4, 1, 1);
         fieldsPane.add(dateBegin, 0, 5, 1, 1);
+        fieldsPane.add(timeBegin, 0, 6, 1, 1);
 
         Label dateEndLabel = new Label("Date end:");
         fieldsPane.add(dateEndLabel, 1, 4, 1, 1);
         fieldsPane.add(dateEnd, 1, 5, 1, 1);
+        fieldsPane.add(timeEnd, 1, 6, 1, 1);
 
         getDialogPane().setContent(fieldsPane);
 
@@ -65,7 +74,13 @@ public class SessionMenuDialog extends Dialog {
         ((Button) dialogPane.lookupButton(dialog.addButton)).setOnAction(e -> {
             Session session = new Session(dialog.getSessionTitle());
             session.setDescription(dialog.getDescription());
-            // todo implement DatePicker/LocalDateTime
+
+            session.setDateBegin(LocalDateTime.of(
+                    dialog.getDateBegin().getValue(), dialog.getTimeBegin().getValue()));
+
+            session.setDateEnd(LocalDateTime.of(
+                    dialog.getDateEnd().getValue(), dialog.getTimeEnd().getValue()));
+
             onAdd.added(session);
         });
 
@@ -78,7 +93,12 @@ public class SessionMenuDialog extends Dialog {
         // set fields to match properties of baseSession
         dialog.setSessionTitle(baseSession.getTitle());
         dialog.setDescription(baseSession.getDescription());
-        // todo implement DatePicker/LocalDateTime
+
+        dialog.setDateBeginValue(baseSession.getDateBegin().toLocalDate());
+        dialog.setTimeBeginValue(baseSession.getDateBegin().toLocalTime());
+
+        dialog.setDateEndValue(baseSession.getDateEnd().toLocalDate());
+        dialog.setTimeEndValue(baseSession.getDateEnd().toLocalTime());
 
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.getButtonTypes().add(dialog.deleteButton);
@@ -91,6 +111,12 @@ public class SessionMenuDialog extends Dialog {
         ((Button) dialogPane.lookupButton(dialog.editButton)).setOnAction(e -> {
             Session editedSession = new Session(dialog.getSessionTitle());
             editedSession.setDescription(dialog.getDescription());
+            editedSession.setDateBegin(LocalDateTime.of(
+                    dialog.getDateBegin().getValue(), dialog.getTimeBegin().getValue()));
+
+            editedSession.setDateEnd(LocalDateTime.of(
+                    dialog.getDateEnd().getValue(), dialog.getTimeEnd().getValue()));
+
             onEdit.edited(editedSession);
         });
 
@@ -111,5 +137,37 @@ public class SessionMenuDialog extends Dialog {
 
     public void setDescription(String description) {
         this.description.setText(description);
+    }
+
+    public DatePicker getDateBegin() {
+        return dateBegin;
+    }
+
+    public void setDateBeginValue(LocalDate value) {
+        this.dateBegin.setValue(value);
+    }
+
+    public TimeSpinner getTimeBegin() {
+        return timeBegin;
+    }
+
+    public void setTimeBeginValue(LocalTime value) {
+        this.timeBegin.setValue(value);
+    }
+
+    public DatePicker getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEndValue(LocalDate value) {
+        this.dateEnd.setValue(value);
+    }
+
+    public TimeSpinner getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEndValue(LocalTime value) {
+        this.timeEnd.setValue(value);
     }
 }
