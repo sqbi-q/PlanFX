@@ -1,5 +1,6 @@
 package com.sqbiq.planfx;
 
+import com.sqbiq.calendarviewfx.Calendar;
 import com.sqbiq.planfx.elements.SessionAddDialog;
 import com.sqbiq.planfx.elements.SessionMenuDialog;
 import com.sqbiq.planfx.elements.SessionView;
@@ -37,9 +38,13 @@ public class HelloApplication extends Application {
         });
 
         root.getChildren().add(getApplicationToolbar(stage, addSessionButton));
+
+        Calendar calendarView = new Calendar();
+        root.getChildren().add(calendarView);
+
         root.getChildren().add(sessionsPane);
 
-        Scene scene = new Scene(root, 320, 240);
+        Scene scene = new Scene(root, 500, 400);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
