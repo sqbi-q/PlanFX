@@ -34,6 +34,8 @@ public class HelloApplication extends Application {
 
         ScrollPane sessionsPane = new ScrollPane();
         sessionsPane.setContent(sessionsContainer);
+        VBox.setVgrow(sessionsPane, Priority.ALWAYS);
+        sessionsPane.setFitToHeight(true);
 
         Button addSessionButton = new Button("Add session");
 
@@ -59,6 +61,7 @@ public class HelloApplication extends Application {
         sessions.add(session);
         SessionView sv = new SessionView(session);
         sv.setPrefWidth(200);
+        sv.prefHeightProperty().bind(sessionsContainer.heightProperty());
 
         sv.addSessionEventListener(new SessionView.SessionViewEventListener() {
             @Override
