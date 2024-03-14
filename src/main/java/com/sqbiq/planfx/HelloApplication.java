@@ -15,13 +15,18 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class HelloApplication extends Application {
     private ArrayList<Session> sessions = new ArrayList<>();
 
     private HBox sessionsContainer = new HBox();
+
+    private Calendar calendarView = new Calendar();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -39,8 +44,8 @@ public class HelloApplication extends Application {
 
         root.getChildren().add(getApplicationToolbar(stage, addSessionButton));
 
-        Calendar calendarView = new Calendar();
         root.getChildren().add(calendarView);
+        calendarView.addChangeDateListener(this::onCalendarUpdate);
 
         root.getChildren().add(sessionsPane);
 
@@ -62,6 +67,7 @@ public class HelloApplication extends Application {
 
                 // remove session view and associated session
                 onSessionDelete(sessionView);
+                onCalendarUpdate();
             }
 
             @Override
@@ -82,15 +88,46 @@ public class HelloApplication extends Application {
                         }
                     });
                 dialog.showAndWait();
+                onCalendarUpdate();
             }
         });
 
         sessionsContainer.getChildren().add(sv);
+        onCalendarUpdate();
     }
 
     private void onSessionDelete(SessionView sv) {
         sessions.remove(sv.getSession());
         sessionsContainer.getChildren().remove(sv);
+    }
+
+    private void onCalendarUpdate() {
+        YearMonth selectedDate = calendarView.getDate();
+
+        List<Button> dateCells = calendarView.getCalendarGrid().getDateCells();
+        dateCells.forEach(cell -> cell.setStyle(null));
+
+        sessions.stream()
+                .filter(session -> {
+                    YearMonth sessionBegin = YearMonth.from(session.getDateBegin());
+                    YearMonth sessionEnd = YearMonth.from(session.getDateEnd());
+
+                    return (selectedDate.isAfter(sessionBegin) || selectedDate.equals(sessionBegin))
+                        && (selectedDate.isBefore(sessionEnd) || selectedDate.equals(sessionEnd));
+                })
+                .forEach(session -> {
+                    LocalDate sessionBegin = LocalDate.from(session.getDateBegin());
+                    LocalDate sessionEnd = LocalDate.from(session.getDateEnd());
+
+                    int dayBegin = selectedDate.atDay(1).isAfter(sessionBegin) ? 1
+                            : sessionBegin.getDayOfMonth();
+                    int dayEnd = selectedDate.atEndOfMonth().isBefore(sessionEnd) ? selectedDate.lengthOfMonth()
+                            : sessionEnd.getDayOfMonth();
+
+                    for (int day = dayBegin; day <= dayEnd; day++) {
+                        dateCells.get(day-1).setStyle("-fx-background-color: #b0b0b0;");
+                    }
+                });
     }
 
     private ToolBar getApplicationToolbar(Stage stage, Node... es) {
